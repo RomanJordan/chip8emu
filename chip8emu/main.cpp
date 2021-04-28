@@ -16,7 +16,7 @@ public:
 		// Called once at the start, so create things here
 
 		chip8.init();
-		if (!chip8.loadProgram("roms/TETRIS")) // This rom selection solution is not very good
+		if (!chip8.loadProgram("roms/redOctober")) // This rom selection solution is not very good
 			return false;
 		return true;
 	}

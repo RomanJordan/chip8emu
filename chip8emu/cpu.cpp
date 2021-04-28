@@ -272,7 +272,7 @@ void cpu::emulateCycle()
 	case 0xE000:
 		switch (opcode & 0x00FF)
 		{
-		case 0x009E: // EX9E: Skips the next instruction if the key stored in VX is pressed
+		case 0x009E: // EX9E: Skips the next instruction if the key stored in VX is pressed. For some reason this buggy as hell :DDD
 			if (key[V[regX]] != 0)
 				pc += 4;
 			else
