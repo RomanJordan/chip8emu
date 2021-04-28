@@ -1,1 +1,73 @@
 #pragma once
+#include <fstream>
+#include <Windows.h>
+
+#define KEY_LENGTH 16
+class cpu
+{
+public:
+	bool draw = false;
+
+	// Program Counter, register index & opcode
+	unsigned short pc, I, opcode;
+
+	unsigned char memory[4069];
+
+	// Registers V0-VF
+	unsigned char V[16];
+
+	unsigned char display[64 * 32];
+
+	unsigned short stack[16];
+	unsigned short sp;
+
+	unsigned char delay_timer;
+	unsigned char sound_timer;
+
+	unsigned char key[16];
+	unsigned char fontset[80] =
+	{
+	  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+	  0x20, 0x60, 0x20, 0x20, 0x70, // 1
+	  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+	  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+	  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+	  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+	  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+	  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+	  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+	  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+	  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+	  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+	  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+	  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+	  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+	  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+	};
+
+
+	void init();
+
+	bool loadProgram(const char* rom);
+
+	// Get Filesize
+	int getFileSize(const char* fileName)
+	{
+		std::ifstream file(fileName, std::ifstream::in | std::ifstream::binary);
+
+		if (!file.is_open())
+			return -1;
+
+		file.seekg(0, std::ios::end);
+		int fileSize = (int)file.tellg();
+		file.close();
+
+		return fileSize;
+	}
+
+	/*
+	 * Execute an opcode.
+	 * First fetch the opcode, decode, execute it and update timers.
+	*/
+	void emulateCycle();
+};
